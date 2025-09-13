@@ -1,4 +1,5 @@
 import { useEffect,useState } from 'react'
+import { Button } from './components/ui/button'
 
 function App() {
   const [message, setMessage] = useState(0)
@@ -8,7 +9,12 @@ function App() {
       .then(data => setMessage(data.message))
   }, [])
 
-  return <p className='font-bold p-4 text-3xl'>{message || "loading.."}</p>
+  return (
+    <div className='p-4'>
+      <p className='font-bold text-3xl'>{message || "loading.."}</p>
+      <Button>Click me</Button>
+    </div>
+  )
 }
 
 export default App
