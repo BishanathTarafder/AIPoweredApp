@@ -14,7 +14,7 @@ bun run index.ts
 
 This project was created using `bun init` in bun v1.2.21. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
 
-TO FIX vite :
+# TO FIX vite :
 
 # Clear Bun cache
 
@@ -31,7 +31,7 @@ Remove-Item -Force yarn.lock -ErrorAction SilentlyContinue
 
 bun install
 
-TO FIX bun :
+# TO FIX bun :
 
 # Stop any processes that might be related
 

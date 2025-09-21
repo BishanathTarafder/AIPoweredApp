@@ -1,11 +1,20 @@
+import fs from 'fs';
+import path from 'path';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import {
    ConversationRepository,
-   Message,
-   Conversation,
+   type Conversation,
+   type Message,
 } from '../repositories/conversation.repository';
+import template from '../prompts/chatbot.txt';
 
-export interface ChatResponse {
+const parkInfo = fs.readFileSync(
+   path.join(__dirname, '..', 'prompts', 'WonderWorld.md'),
+   'utf-8'
+);
+const instructions = template.replace('{{parkInfo}}', parkInfo);
+
+interface ChatResponse {
    conversationId: string;
    message: string;
    messageCount: number;
@@ -85,6 +94,7 @@ export class ChatService {
    ): Promise<string> {
       const model = this.client.getGenerativeModel({
          model: 'gemini-1.5-flash',
+         systemInstruction: instructions,
       });
 
       let result;
