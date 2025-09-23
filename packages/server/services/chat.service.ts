@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { llmClient } from '../llm/client';
 import {
    ConversationRepository,
    type Conversation,
@@ -21,13 +21,9 @@ interface ChatResponse {
 }
 
 export class ChatService {
-   private client: GoogleGenerativeAI;
    private conversationRepo: ConversationRepository;
 
    constructor() {
-      this.client = new GoogleGenerativeAI(
-         process.env.GEMINI_API_KEY as string
-      );
       this.conversationRepo = new ConversationRepository();
    }
 
@@ -92,28 +88,35 @@ export class ChatService {
       prompt: string,
       conversation: Conversation
    ): Promise<string> {
-      const model = this.client.getGenerativeModel({
-         model: 'gemini-1.5-flash',
-         systemInstruction: instructions,
-      });
-
-      let result;
       if (conversation.messages.length > 1) {
-         // Use conversation history for context (excluding the just-added user message)
-         const history = conversation.messages.slice(0, -1).map((msg) => ({
-            role: msg.role,
-            parts: [{ text: msg.content }],
-         }));
+         // For conversations with history, you'll need to build context
+         const history = conversation.messages
+            .slice(0, -1)
+            .map(
+               (msg) =>
+                  `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+            )
+            .join('\n');
 
-         const chat = model.startChat({ history });
-         result = await chat.sendMessage(prompt);
+         const contextualPrompt = `${instructions}\n\nConversation History:\n${history}\n\nUser: ${prompt}\n\nAssistant:`;
+
+         return llmClient.generateText({
+            model: 'gemini-1.5-flash',
+            prompt: contextualPrompt,
+            temperature: 0.7,
+            maxOutputTokens: 500,
+         });
       } else {
          // First message
-         result = await model.generateContent(prompt);
-      }
+         const fullPrompt = `${instructions}\n\nUser: ${prompt}\n\nAssistant:`;
 
-      const response = await result.response;
-      return response.text();
+         return llmClient.generateText({
+            model: 'gemini-1.5-flash',
+            prompt: fullPrompt,
+            temperature: 0.7,
+            maxOutputTokens: 500,
+         });
+      }
    }
 
    getConversation(id: string): Conversation | undefined {
