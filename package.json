@@ -20,5 +20,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "dayjs": "^1.11.18"
+  }
 }
