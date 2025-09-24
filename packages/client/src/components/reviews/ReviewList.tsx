@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import StarRating from './StarRating';
-import type { PiPlaceholder } from 'react-icons/pi';
 
 type Props = {
    productId: number;
@@ -24,14 +23,22 @@ type GetReviewsResponse = {
 const ReviewList = ({ productId }: Props) => {
    const [reviewData, setReviewData] = useState<GetReviewsResponse>();
    const [isLoading, setIsLoading] = useState(false);
+   const [error, setError] = useState('');
 
    const fetchReviews = async () => {
-      setIsLoading(true);
-      const { data } = await axios.get<GetReviewsResponse>(
-         `/api/products/${productId}/reviews`
-      );
-      setReviewData(data);
-      setIsLoading(false);
+      try {
+         setIsLoading(true);
+         const { data } = await axios.get<GetReviewsResponse>(
+            `/api/products/${productId}/reviews`
+         );
+         setReviewData(data);
+         setIsLoading(false);
+      } catch (error) {
+         console.error(error);
+         setError('Could not fetch reviews. Try again later.');
+      } finally {
+         setIsLoading(false);
+      }
    };
 
    useEffect(() => {
@@ -51,6 +58,10 @@ const ReviewList = ({ productId }: Props) => {
             ))}
          </div>
       );
+   }
+
+   if (error) {
+      return <div className="text-red-500">{error}</div>;
    }
 
    return (
