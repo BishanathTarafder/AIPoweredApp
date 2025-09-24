@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { PrismaClient, type Review } from '../generated/prisma';
-import { get } from 'http';
 
 const prisma = new PrismaClient();
 
@@ -30,9 +29,13 @@ export const reviewRepository = {
       });
    },
 
-   getReviewSummary: (productId: number) => {
-      return prisma.summary.findUnique({
-         where: { productId },
+   async getReviewSummary(productId: number): Promise<string | null> {
+      const summary = await prisma.summary.findFirst({
+         where: {
+            AND: [{ productId }, { expiryDate: { gt: new Date() } }],
+         },
       });
+
+      return summary ? summary.content : null;
    },
 };
