@@ -57,6 +57,7 @@
       "name": "server",
       "dependencies": {
         "@google/generative-ai": "^0.24.1",
+        "@huggingface/inference": "^4.9.0",
         "@prisma/client": "^6.16.2",
         "dotenv": "^17.2.2",
         "express": "^5.1.0",
@@ -184,6 +185,12 @@
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.5", "", { "dependencies": { "@eslint/core": "^0.15.2", "levn": "^0.4.1" } }, "sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w=="],
 
     "@google/generative-ai": ["@google/generative-ai@0.24.1", "", {}, "sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q=="],
+
+    "@huggingface/inference": ["@huggingface/inference@4.9.0", "", { "dependencies": { "@huggingface/jinja": "^0.5.1", "@huggingface/tasks": "^0.19.48" } }, "sha512-ajT+7fs2648pfCEeJOxBRFnXuAAQO8Tw3ArrQbCija7rUjOotK2wxu4tK2VzIsx3UwsxgEFSpnpYi+Cyu19IUg=="],
+
+    "@huggingface/jinja": ["@huggingface/jinja@0.5.1", "", {}, "sha512-yUZLld4lrM9iFxHCwFQ7D1HW2MWMwSbeB7WzWqFYDWK+rEb+WldkLdAJxUPOmgICMHZLzZGVcVjFh3w/YGubng=="],
+
+    "@huggingface/tasks": ["@huggingface/tasks@0.19.48", "", {}, "sha512-9OIMhl6lSvuim0EisMPbwO4fUmMlbAXh5/GIMVAQALoByouockaaDxMuzJ9IffHRsl3qjS+QSD/mPe65kuPeyQ=="],
 
     "@humanfs/core": ["@humanfs/core@0.19.1", "", {}, "sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA=="],
 

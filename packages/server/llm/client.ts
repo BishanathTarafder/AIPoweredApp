@@ -1,6 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { InferenceClient } from '@huggingface/inference';
+import summarizePrompt from '../prompts/summarize-reviews.txt';
 
-const client = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+const geminiClient = new GoogleGenerativeAI(
+   process.env.GEMINI_API_KEY as string
+);
+
+const inferenceClient = new InferenceClient(process.env.HF_TOKEN);
 
 function sleep(ms: number) {
    return new Promise((resolve) => setTimeout(resolve, ms));
@@ -20,7 +26,7 @@ export const llmClient = {
       temperature = 0.2,
       maxOutputTokens = 300,
    }: GeneratedTextOptions) {
-      const generativeModel = client.getGenerativeModel({ model });
+      const generativeModel = geminiClient.getGenerativeModel({ model });
       let lastErr: any = null;
 
       for (let attempt = 0; attempt < 3; attempt++) {
@@ -53,5 +59,23 @@ export const llmClient = {
 
       // If all retries failed
       throw lastErr;
+   },
+
+   async summarizeReviews(reviews: string) {
+      const chatCompletion = await inferenceClient.chatCompletion({
+         provider: 'nebius',
+         model: 'meta-llama/Llama-3.1-8B-Instruct',
+         messages: [
+            {
+               role: 'system',
+               content: summarizePrompt,
+            },
+            {
+               role: 'user',
+               content: reviews,
+            },
+         ],
+      });
+      return chatCompletion.choices[0]?.message.content;
    },
 };
