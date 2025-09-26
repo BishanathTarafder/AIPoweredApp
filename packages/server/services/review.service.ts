@@ -14,7 +14,7 @@ export const reviewService = {
       const joinedReviews = reviews.map((r) => r.content).join('\n\n');
       const prompt = template.replace('{{reviews}}', joinedReviews);
       const summary = await llmClient.generateText({
-         model: 'gemini-1.5-flash',
+         model: 'gemini-2.5-flash-lite',
          prompt,
          temperature: 0.2,
          maxOutputTokens: 500,
