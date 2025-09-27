@@ -1,3 +1,4 @@
+import { Ollama } from 'ollama';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { InferenceClient } from '@huggingface/inference';
 import summarizePrompt from '../prompts/summarize-reviews.txt';
@@ -7,6 +8,8 @@ const geminiClient = new GoogleGenerativeAI(
 );
 
 const inferenceClient = new InferenceClient(process.env.HF_TOKEN);
+
+const ollamaClient = new Ollama();
 
 function sleep(ms: number) {
    return new Promise((resolve) => setTimeout(resolve, ms));
@@ -62,9 +65,8 @@ export const llmClient = {
    },
 
    async summarizeReviews(reviews: string) {
-      const chatCompletion = await inferenceClient.chatCompletion({
-         provider: 'nebius',
-         model: 'meta-llama/Llama-3.1-8B-Instruct',
+      const response = await ollamaClient.chat({
+         model: 'tinyllama',
          messages: [
             {
                role: 'system',
@@ -76,6 +78,6 @@ export const llmClient = {
             },
          ],
       });
-      return chatCompletion.choices[0]?.message.content;
+      return response.message.content;
    },
 };
